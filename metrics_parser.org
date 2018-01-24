@@ -1,0 +1,77 @@
+* METRIC PARSER
+#+PROPERTY: header-args :var METRIC_TYPE1="submit_request_rx"  :var METRIC_TYPE2="submit_response_tx" :var ESME="TIMOING" :dir /home/cqs/Projects/parsing_metrics/OI_data/20180120.OI.metrics
+
+** finding metrics for particular ESME
+
+#+NAME: partcode
+#+BEGIN_SRC bash  :results file :file /tmp/metric_parser_out.csv
+echo "Time,${METRIC_TYPE1},${METRIC_TYPE2}"
+for FILE in $(dir); do
+
+    TIMEF=$(echo "${FILE}" | sed 's/\([0-9]\{4\}\)\([0-9]\{2\}\)\([0-9]\{2\}\)_\([0-9]\{2\}\)\([0-9]\{2\}\)\(.*\)/\4:\5 \3-\2-\1/')
+
+    MATCH1=$(grep -i ${ESME} ${FILE} |grep -i Counter |grep -i ApplicationAccessGroup |grep -i ${METRIC_TYPE1})
+    MATCH1=$(echo ${MATCH1} | sed 's/;$//' | cut -d"," -f7)
+    MATCH2=$(grep -i ${ESME} ${FILE} |grep -i Counter |grep -i ApplicationAccessGroup |grep -i ${METRIC_TYPE2})
+    MATCH2=$(echo ${MATCH2} | sed 's/;$//' | cut -d"," -f7)
+    echo "${TIMEF},${MATCH1},${MATCH2}"
+done
+#+END_SRC
+
+#+RESULTS: partcode
+[[file:/tmp/metric_parser_out.csv]]
+
+#+BEGIN_SRC python
+import plotly.offline as py
+import plotly.graph_objs as go
+import plotly.figure_factory as FF
+import pandas as pd
+
+#plotly.tools.set_credentials_file(username='masaj', api_key='Kuchtoku22')
+#py.sign_in("masaj", "Kuchtoku22")
+
+df = pd.read_csv('/tmp/metric_parser_out.csv', delimiter=',')
+df.head()
+print(df)
+
+metric1 = go.Scatter(
+        x=df['Time'],
+        y=df[METRIC_TYPE1],
+        mode='lines', name=METRIC_TYPE1
+    )
+
+metric2 = go.Scatter(
+        x=df['Time'],
+        y=df[METRIC_TYPE2],
+        mode='lines', name=METRIC_TYPE2
+    )
+
+layout = go.Layout(
+    title='AAG/XAG metrics plot',
+    yaxis=dict(title='count'),
+    xaxis=dict(title='Time')
+    )
+
+fig = go.Figure(data=[metric1, metric2], layout=layout)
+
+url = py.plot(fig, filename='/tmp/pandas_plot')
+
+
+#+END_SRC
+
+#+RESULTS:
+: None
+
+
+** gnuplot example
+#+BEGIN_SRC gnuplot :var data=partcode :file /tmp/metric_test.png
+reset
+set title "submit request rx : TIMOING"
+set xlabel "Time"
+set ylabel "MSG Count"
+#set xdata time
+#set timefmt "%H:%M %d-%m-%Y"
+set xtics rotate
+set terminal png size 1600,1000
+plot data using 2:xtic(1) with lines, '' using 1 with lines
+#+END_SRC
