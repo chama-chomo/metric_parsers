@@ -14,7 +14,7 @@ def sigint_handler(signum, frame):
 signal.signal(signal.SIGINT, sigint_handler)
 
 
-mfile = '/home/cqs/Projects/parsing_metrics/20180118_141500192.168.50.22Metrics.log_modded'
+mfile = '/home/cqs/Projects/parsing_metrics/metrics_sample/20180118_141500192.168.50.22Metrics.log_modded'
 
 """Header for CSV."""
 header = ['Counter', 'Operation', 'Node', 'Topic', 'Node_Id', 'Count_all', 'Count_last']
