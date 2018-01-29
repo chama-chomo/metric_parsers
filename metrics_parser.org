@@ -1,5 +1,5 @@
 * METRIC PARSER
-#+PROPERTY: header-args :var METRIC_TYPE1="submit_request_rx"  :var METRIC_TYPE2="submit_response_tx" :var ESME="TIMOING" :dir /home/cqs/Projects/parsing_metrics/OI_data/20180120.OI.metrics
+#+PROPERTY: header-args :var METRIC_TYPE1="submit_request_rx"  :var METRIC_TYPE2="submit_response_tx" :var ESME="TIMOING" :dir /home/cqs/Projects/parsing_metrics/OI_data/20180120_OI_metrics
 
 ** finding metrics for particular ESME
 
@@ -24,7 +24,8 @@ done
 #+BEGIN_SRC python
 import plotly.offline as py
 import plotly.graph_objs as go
-import plotly.figure_factory as FF
+#import plotly.figure_factory as FF
+from plotly.tools import FigureFactory as FF
 import pandas as pd
 
 #plotly.tools.set_credentials_file(username='masaj', api_key='Kuchtoku22')

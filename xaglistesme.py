@@ -1,8 +1,11 @@
 #!/usr/bin/python
 
 import re
+import sys
 
-f = open('OI_data/omglistesme.OI.out', 'r')
+file_m = sys.argv[1]
+
+f = open(file_m, 'r')
 lines = f.readlines()
 f.close()
 
