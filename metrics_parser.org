@@ -27,8 +27,6 @@ import plotly.graph_objs as go
 import plotly.figure_factory as FF
 import pandas as pd
 
-#plotly.tools.set_credentials_file(username='masaj', api_key='Kuchtoku22')
-#py.sign_in("masaj", "Kuchtoku22")
 
 df = pd.read_csv('/tmp/metric_parser_out.csv', delimiter=',')
 df.head()
